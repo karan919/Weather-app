@@ -1,25 +1,48 @@
-$(document).ready( function(){
-	let lat = '';
-	let long = '';
-	let url = '';
-	if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(function(position) {
-  	lat = Math.round(position.coords.latitude);
-  	long = Math.round(position.coords.longitude);
-  	url= "https://fcc-weather-api.glitch.me/api/current?lat="+long+"&lon="+lat;
-    $("#test1").html("latitude: " + lat+ "<br>longitude: " + long);
-    
-  });
-}
+let api = "https://fcc-weather-api.glitch.me/api/current?";
+let lat, lon;
+let tempUnit = 'C';
+let currentTempInCelsius;
 
-	$.get(url,function(response){
-		$("#test3").html(response.weather);
+$(document).ready(function()
+	{
+  		if (navigator.geolocation)
+  			{
+    			navigator.geolocation.getCurrentPosition(function (position)
+    				{
+      					var lat = "lat=" + position.coords.latitude;
+      					var lon = "lon=" + position.coords.longitude;
+      					getWeather(lat, lon);
+    				});
+  			} 
+  		else 
+  			{
+    			console.log("Not Supported by this browser. ");
+    		}
+
+    	$("#convert").click(function () {
+    var currentTempUnit = $("#tempunit").text();
+    var newTempUnit = currentTempUnit == "C" ? "F" : "C";
+    $("#tempunit").text(newTempUnit);
+    if (newTempUnit == "F") {
+      var fahTemp = Math.round(parseInt($("#temp").text()) * 9 / 5 + 32);
+      $("#temp").text(fahTemp + " " + String.fromCharCode(176));
+    } else {
+      $("#temp").text(currentTempInCelsius + " " + String.fromCharCode(176));
+    }
+  });
+
 	});
 
-function showurl(){
-$("#test1").html(url);
-
-}
-$("#test2").click(showurl);
-	
-});
+  function getWeather(lat, lon) {
+  	let urlString = api + lat + "&" + lon;
+  	$.ajax({url: urlString, success: function(result){
+  		$("#city").text(result.name+ ", ");
+  		$("#country").text(result.sys.country);
+  		currentTempInCelsius = Math.round(result.main.temp * 10) / 10;
+  		$("#temp").text(currentTempInCelsius + " " + String.fromCharCode(176));
+  		$("#tempunit").text(tempUnit);
+  		$("#desc").text(result.weather[0].main);
+  		$("#icon").attr('src',result.weather[0].icon);
+  	}
+  	});
+  }
