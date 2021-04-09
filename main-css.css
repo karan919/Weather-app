@@ -1,5 +1,5 @@
 html {
-  background: url(image1.jpg) no-repeat center center fixed;
+  background: url(https://wallpapercave.com/wp/ijZaCCZ.jpg) no-repeat center center fixed;
   background-size: cover;
   height: 100%;
   overflow: hidden;
@@ -12,7 +12,7 @@ html {
     display: flex;
   	justify-content: center;
 	margin: 20px;
-	font-size: 2vw;
+	font-size: 2rem;
 	flex-direction: column;
 	padding: 10px;
 }
